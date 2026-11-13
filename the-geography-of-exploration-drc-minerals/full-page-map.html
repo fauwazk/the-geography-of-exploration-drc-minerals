@@ -1,48 +1,913 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
-  <!-- Without this line, phones lay the page out at desktop width and the map looks tiny. -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Full page map | The Geography of Extraction</title>
-  <meta name="description" content="An interactive mapping project exploring extraction, territory, conflict, and global circulation.">
 
-  <!-- MapLibre's stylesheet. Keep it on the same major version (6) as the import map below. -->
-  <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@6/dist/maplibre-gl.css">
-  <link rel="stylesheet" href="css/site.css">
-  <!-- Tells the browser where "maplibre-gl" lives. The map needs it. -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>
+    The Geography of Extraction | DRC Conflict and Mineral Infrastructure
+  </title>
+
+  <meta
+    name="description"
+    content="An interactive map examining conflict events in relation to mineral infrastructure and major roads in the Democratic Republic of the Congo."
+  >
+
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/maplibre-gl@6/dist/maplibre-gl.css"
+  >
+
+  <link
+    rel="stylesheet"
+    href="css/site.css"
+  >
+
   <script type="importmap">
-    { "imports": { "maplibre-gl": "https://unpkg.com/maplibre-gl@6/dist/maplibre-gl.mjs" } }
+    {
+      "imports": {
+        "maplibre-gl": "https://unpkg.com/maplibre-gl@6/dist/maplibre-gl.mjs"
+      }
+    }
   </script>
-  <!-- Defines <ml-map> and <ml-scrollytelling>. "@0.10" loads the newest 0.10.x release. -->
-  <script type="module" src="https://unpkg.com/@maplibre-yaml/core@0.10/register.js"></script>
+
+  <script
+    type="module"
+    src="https://unpkg.com/@maplibre-yaml/core@0.10/register.js">
+  </script>
+
+
+  <style>
+
+    .site-context {
+      color: #a8a29e;
+      font-size: 0.78rem;
+    }
+
+
+    .map-source {
+      margin-top: 0.65rem;
+      padding-top: 0.55rem;
+
+      border-top: 1px solid rgb(0 0 0 / 0.08);
+
+      color: #78716c;
+
+      font-size: 0.62rem;
+      line-height: 1.35;
+    }
+
+
+    @media (max-width: 700px) {
+
+      .site-context {
+        display: none;
+      }
+
+    }
+
+  </style>
+
 </head>
-<!-- class="bleed": no page padding and no footer, for a page that is one big map. -->
+
+
 <body class="bleed">
-  <!-- The header is copied into every page. Changing a link? Change it in all four .html files. -->
+
+
+  <!-- =========================================================
+       PROJECT HEADER
+  ========================================================== -->
+
   <header class="site-header">
+
     <div class="container">
-      <a class="site-name" href="./">The Geography of Extraction</a>
-      <nav class="site-nav">
-        <a href="inline-maps.html">Inline maps</a>
-        <a href="full-page-map.html" aria-current="page">Full page map</a>
-        <a href="scrollytelling.html">Scrollytelling</a>
-      </nav>
+
+      <a
+        class="site-name"
+        href="full-page-map.html">
+        The Geography of Extraction
+      </a>
+
+      <span class="site-context">
+        Interactive map · Democratic Republic of the Congo
+      </span>
+
     </div>
+
   </header>
 
+
+
   <main>
-    <!--
-      The map is maps/full-page.yaml. class="full-page-map" (css/site.css)
-      makes it fill the window below the header.
-    -->
-    <ml-map src="maps/full-page.yaml" class="full-page-map">
-      <!-- A child with slot="top-left" (or top-right, bottom-left, bottom-right) sits in that corner of the map. -->
-      <div slot="top-left" class="map-note">
-        <strong>Conflict Events in Relation to Mineral Infrastructure</strong><br>
+
+    <ml-map
+      id="drc-map"
+      src="maps/full-page.yaml"
+      class="full-page-map">
+
+
+      <!-- =====================================================
+           TITLE + EXPLANATION + VIEW CONTROLS
+      ====================================================== -->
+
+      <div
+        slot="top-left"
+        class="map-note map-title-panel">
+
+
+        <strong>
+          Conflict Events in Relation to Mineral Infrastructure
+        </strong>
+
+        <br>
+
         Democratic Republic of the Congo, 2021–2026
+
+
+        <p class="map-description">
+
+          This map looks at where conflict has taken place in relation
+          to mineral sites and major roads across the Democratic
+          Republic of the Congo. The three conflict categories show
+          whether events happened near mineral infrastructure, near
+          other major roads, or away from both. The aim is to make
+          visible how unevenly conflict is distributed across these
+          different parts of the country.
+
+        </p>
+
+
+
+        <div class="view-controls">
+
+          <button
+            type="button"
+            id="national-view"
+            class="view-button active">
+            National view
+          </button>
+
+          <button
+            type="button"
+            id="eastern-view"
+            class="view-button">
+            Explore Eastern DRC
+          </button>
+
+        </div>
+
+
+
+        <div class="map-source">
+
+          Sources: ACLED conflict-event data; USGS ScienceBase,
+          <em>Compilation of Geospatial Data for the Mineral Industries
+          and Related Infrastructure of Africa</em>; author’s spatial
+          analysis and classification. Map by Fauwaz Khan, Columbia University, 2026.
+
+        </div>
+
+
       </div>
+
+
+
+      <!-- =====================================================
+           LAYER CONTROLS + LEGEND
+      ====================================================== -->
+
+      <div
+        slot="top-right"
+        class="map-note layer-control">
+
+
+        <div class="control-heading">
+          Map layers
+        </div>
+
+
+
+        <!-- Infrastructure -->
+
+        <div class="control-group">
+
+          <div class="control-group-title">
+            Infrastructure
+          </div>
+
+
+          <label class="layer-option">
+
+            <input
+              type="checkbox"
+              data-layer="mineral-facilities"
+              checked
+            >
+
+            <span
+              class="control-symbol control-dot mineral">
+            </span>
+
+            <span>
+              Mineral facilities
+            </span>
+
+          </label>
+
+
+
+          <label class="layer-option">
+
+            <input
+              type="checkbox"
+              data-layer="roads"
+              checked
+            >
+
+            <span
+              class="control-symbol control-line roads">
+            </span>
+
+            <span>
+              Major roads
+            </span>
+
+          </label>
+
+        </div>
+
+
+
+        <!-- Conflict -->
+
+        <div class="control-group">
+
+          <div class="control-group-title">
+            Conflict
+          </div>
+
+
+
+          <label class="layer-option layer-option-with-stats">
+
+            <input
+              type="checkbox"
+              data-layer="acled-within"
+              checked
+            >
+
+            <span
+              class="control-symbol control-dot conflict-mineral">
+            </span>
+
+            <span class="layer-text">
+
+              <span class="layer-name">
+                Within mineral infrastructure zone
+              </span>
+
+              <span class="layer-stats">
+
+                <span>
+                  38.2% of events
+                </span>
+
+                <span>
+                  4.0% of land
+                </span>
+
+                <span>
+                  9.4× concentration
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+
+          <label class="layer-option layer-option-with-stats">
+
+            <input
+              type="checkbox"
+              data-layer="acled-roads"
+              checked
+            >
+
+            <span
+              class="control-symbol control-dot conflict-roads">
+            </span>
+
+            <span class="layer-text">
+
+              <span class="layer-name">
+                Within other road-access zone
+              </span>
+
+              <span class="layer-stats">
+
+                <span>
+                  32.3% of events
+                </span>
+
+                <span>
+                  14.3% of land
+                </span>
+
+                <span>
+                  2.3× concentration
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+
+
+          <label class="layer-option layer-option-with-stats">
+
+            <input
+              type="checkbox"
+              data-layer="acled-other"
+              checked
+            >
+
+            <span
+              class="control-symbol control-dot conflict-other">
+            </span>
+
+            <span class="layer-text">
+
+              <span class="layer-name">
+                Outside both zones
+              </span>
+
+              <span class="layer-stats">
+
+                <span>
+                  29.5% of events
+                </span>
+
+                <span>
+                  81.7% of land
+                </span>
+
+                <span>
+                  0.36× concentration
+                </span>
+
+              </span>
+
+            </span>
+
+          </label>
+
+        </div>
+
+      </div>
+
     </ml-map>
+
   </main>
+
+
+
+  <script type="module">
+
+    import { Popup } from "maplibre-gl";
+
+
+    const mapElement =
+      document.querySelector("#drc-map");
+
+
+    const checkboxes =
+      document.querySelectorAll(
+        ".layer-control input[data-layer]"
+      );
+
+
+    const nationalButton =
+      document.querySelector("#national-view");
+
+
+    const easternButton =
+      document.querySelector("#eastern-view");
+
+
+    const map =
+      await mapElement.mapReady();
+
+
+
+    /* ============================================================
+       MAP VIEWS
+    ============================================================ */
+
+
+    const nationalView = {
+
+      center: [24, -4.1],
+
+      zoom: 4.5
+
+    };
+
+
+    const easternView = {
+
+      center: [28.9, -0.4],
+
+      zoom: 6.2
+
+    };
+
+
+
+    function setActiveView(activeButton) {
+
+      nationalButton.classList.remove("active");
+
+      easternButton.classList.remove("active");
+
+      activeButton.classList.add("active");
+
+    }
+
+
+
+    nationalButton.addEventListener(
+      "click",
+      () => {
+
+        map.flyTo({
+
+          center: nationalView.center,
+
+          zoom: nationalView.zoom,
+
+          duration: 1400,
+
+          essential: true
+
+        });
+
+
+        setActiveView(
+          nationalButton
+        );
+
+      }
+    );
+
+
+
+    easternButton.addEventListener(
+      "click",
+      () => {
+
+        map.flyTo({
+
+          center: easternView.center,
+
+          zoom: easternView.zoom,
+
+          duration: 1400,
+
+          essential: true
+
+        });
+
+
+        setActiveView(
+          easternButton
+        );
+
+      }
+    );
+
+
+
+    /* ============================================================
+       LAYER TOGGLES
+    ============================================================ */
+
+
+    checkboxes.forEach(
+      (checkbox) => {
+
+        checkbox.addEventListener(
+          "change",
+          () => {
+
+            const layerId =
+              checkbox.dataset.layer;
+
+
+            const visibility =
+              checkbox.checked
+                ? "visible"
+                : "none";
+
+
+            if (
+              map.getLayer(layerId)
+            ) {
+
+              map.setLayoutProperty(
+                layerId,
+                "visibility",
+                visibility
+              );
+
+            }
+
+          }
+        );
+
+      }
+    );
+
+
+
+    /* ============================================================
+       POPUP HELPERS
+    ============================================================ */
+
+
+    function cleanValue(value) {
+
+      if (
+        value === null ||
+        value === undefined ||
+        value === "" ||
+        value === "<null>"
+      ) {
+
+        return null;
+
+      }
+
+
+      return String(value);
+
+    }
+
+
+
+    function escapeHtml(value) {
+
+      const cleaned =
+        cleanValue(value);
+
+
+      if (!cleaned) {
+
+        return "";
+
+      }
+
+
+      return cleaned
+
+        .replaceAll(
+          "&",
+          "&amp;"
+        )
+
+        .replaceAll(
+          "<",
+          "&lt;"
+        )
+
+        .replaceAll(
+          ">",
+          "&gt;"
+        )
+
+        .replaceAll(
+          '"',
+          "&quot;"
+        )
+
+        .replaceAll(
+          "'",
+          "&#039;"
+        );
+
+    }
+
+
+
+    /* ============================================================
+       MINERAL FACILITY POPUPS
+
+       Mineral facilities are individually explorable.
+
+       Conflict events intentionally remain non-clickable because
+       they are being represented as a collective spatial pattern.
+    ============================================================ */
+
+
+    map.on(
+      "click",
+      "mineral-facilities",
+      (event) => {
+
+        const feature =
+          event.features?.[0];
+
+
+        if (!feature) {
+
+          return;
+
+        }
+
+
+        const p =
+          feature.properties;
+
+
+
+        const name =
+          escapeHtml(
+            p.FeatureNam
+          ) ||
+          "Mineral facility";
+
+
+        const type =
+          escapeHtml(
+            p.FeatureTyp
+          );
+
+
+        const commodity =
+          escapeHtml(
+            p.DsgAttr02
+          );
+
+
+        const province =
+          escapeHtml(
+            p.ADM1
+          );
+
+
+        const status =
+          escapeHtml(
+            p.LocOpStat
+          );
+
+
+        const operator =
+          escapeHtml(
+            p.OperateNam
+          );
+
+
+        const owner =
+          escapeHtml(
+            p.OwnerName1
+          );
+
+
+        const capacity =
+          escapeHtml(
+            p.DsgAttr07
+          );
+
+
+        const unit =
+          escapeHtml(
+            p.DsgAttr08
+          );
+
+
+
+        const popupHtml = `
+
+          <div class="facility-popup">
+
+
+            <div class="popup-title">
+
+              ${name}
+
+            </div>
+
+
+            ${
+              type
+
+                ? `
+                  <div class="popup-subtitle">
+                    ${type}
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            ${
+              commodity
+
+                ? `
+                  <div class="popup-section">
+
+                    <strong>
+                      Commodity
+                    </strong>
+
+                    <br>
+
+                    ${commodity}
+
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            ${
+              province
+
+                ? `
+                  <div class="popup-section">
+
+                    <strong>
+                      Province
+                    </strong>
+
+                    <br>
+
+                    ${province}
+
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            ${
+              status
+
+                ? `
+                  <div class="popup-section">
+
+                    <strong>
+                      Operating status
+                    </strong>
+
+                    <br>
+
+                    ${status}
+
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            ${
+              operator
+
+                ? `
+                  <div class="popup-section">
+
+                    <strong>
+                      Operator
+                    </strong>
+
+                    <br>
+
+                    ${operator}
+
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            ${
+              owner
+
+                ? `
+                  <div class="popup-section">
+
+                    <strong>
+                      Owner
+                    </strong>
+
+                    <br>
+
+                    ${owner}
+
+                  </div>
+                `
+
+                : ""
+            }
+
+
+            ${
+              capacity
+
+                ? `
+                  <div class="popup-section">
+
+                    <strong>
+                      Capacity / value
+                    </strong>
+
+                    <br>
+
+                    ${capacity}${unit ? ` ${unit}` : ""}
+
+                  </div>
+                `
+
+                : ""
+            }
+
+
+          </div>
+
+        `;
+
+
+
+        new Popup({
+
+          closeButton: true,
+
+          closeOnClick: true,
+
+          maxWidth: "320px"
+
+        })
+
+          .setLngLat(
+            event.lngLat
+          )
+
+          .setHTML(
+            popupHtml
+          )
+
+          .addTo(
+            map
+          );
+
+      }
+    );
+
+
+
+    /* ============================================================
+       MINERAL FACILITY POINTER
+    ============================================================ */
+
+
+    map.on(
+      "mouseenter",
+      "mineral-facilities",
+      () => {
+
+        map.getCanvas().style.cursor =
+          "pointer";
+
+      }
+    );
+
+
+
+    map.on(
+      "mouseleave",
+      "mineral-facilities",
+      () => {
+
+        map.getCanvas().style.cursor =
+          "";
+
+      }
+    );
+
+
+  </script>
+
 </body>
+
 </html>

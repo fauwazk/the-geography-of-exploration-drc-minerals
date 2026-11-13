@@ -1,0 +1,20 @@
+CODE SOURCES
+
+This project builds on the plain HTML / MapLibre template provided in the course.
+
+Tutorial 8.1 was useful for setting up the project workflow, GitHub, VS Code and Maputnik, and for thinking about keeping the basemap visually secondary.
+
+Tutorial 8.2 was the main reference for loading GeoJSON data, organising layers in MapLibre YAML, previewing the map locally and publishing through GitHub Pages.
+
+Tutorial 8.3 was useful for understanding feature interaction and popups. I used that idea for the mineral facilities, where clicking a point reveals information from the GeoJSON attributes.
+
+I also referred to MapLibre examples for specific JavaScript behaviour such as popups, layer visibility and flyTo:
+https://maplibre.org/maplibre-gl-js/docs/examples/
+
+The spatial analysis itself was completed in ArcGIS Pro before building the web map. The conflict categories and concentration statistics come from that earlier analysis.
+
+ChatGPT was used mainly for troubleshooting and adapting the course examples to my specific map, including the layer controls, mineral popups and National / Eastern DRC view switch. I tested each change in VS Code and adjusted the design manually.
+
+For example, I changed the Eastern DRC map centre after testing it, adjusted the road styling because it competed with the conflict layers, and decided not to make the conflict events clickable because it made the map too busy.
+
+The final project therefore combines the course template and tutorials, MapLibre documentation, my existing GIS analysis, and LLM-assisted troubleshooting.

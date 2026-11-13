@@ -1,81 +1,66 @@
 # yaml-language-server: $schema=https://docs.maplibre-yaml.org/schema/latest/map.schema.json
-#
-# The map on full-page-map.html: it fills the window under the site
-# header, with zoom buttons, a legend and a layer panel.
+
 type: map
 id: full-page
+
 config:
   mapStyle: "fk2506_gis4dp_base1.json"
-  center: [21.7587, -4.0383]
-  zoom: 4.2
+  center: [24, -4.1]
+  zoom: 4.5
 
-# MapLibre's own buttons. `navigation` adds zoom in/out and a compass (click
-# it to turn the map back to north). Others: scale, fullscreen, geolocate.
-# Put in the bottom-right corner so the layer panel sits alone at the top
-# right (positions: top-left, top-right, bottom-left, bottom-right).
 controls:
   navigation:
     enabled: true
     position: bottom-right
 
-# Where the legend sits: top-left (default), top-right, bottom-left, bottom-right.
-legend:
-  position: bottom-left
-
 layers:
-  - id: mineral-facilities
-    type: circle
-    label: Mineral facilities
-    source:
-      type: geojson
-      url: "data/drc-mineral-facilities.json"
-    paint:
-      circle-radius: 5
-      circle-color: "#b2182b"
-      circle-stroke-width: 1
-      circle-stroke-color: "#ffffff"
-    legend: { label: Mineral facilities, color: "#b2182b", shape: circle }
-
   - id: roads
     type: line
-    label: Roads
     source:
       type: geojson
       url: "data/drc-roads.json"
     paint:
-      line-color: "#666666"
-      line-width: 1.5
-    legend: { label: Roads, color: "#666666", shape: line }
-
-  - id: acled-within
-    type: circle
-    label: Conflict — mineral infrastructure
-    source:
-      type: geojson
-      url: "data/drc-acled-within.json"
-    paint:
-      circle-radius: 3
-      circle-color: "#b2182b"
-    legend: { label: Conflict — mineral infrastructure, color: "#b2182b", shape: circle }
-
-  - id: acled-roads
-    type: circle
-    label: Conflict — other roads
-    source:
-      type: geojson
-      url: "data/drc-acled-roads.json"
-    paint:
-      circle-radius: 3
-      circle-color: "#2166ac"
-    legend: { label: Conflict — other roads, color: "#2166ac", shape: circle }
+      line-color: "#7f7f7f"
+      line-width: 0.8
+      line-opacity: 0.55
 
   - id: acled-other
     type: circle
-    label: Conflict — elsewhere
     source:
       type: geojson
       url: "data/drc-acled-other.json"
     paint:
-      circle-radius: 3
-      circle-color: "#999999"
-    legend: { label: Conflict — elsewhere, color: "#999999", shape: circle }
+      circle-radius: 1.4
+      circle-color: "#BE9D5A"
+      circle-opacity: 0.55
+
+  - id: acled-roads
+    type: circle
+    source:
+      type: geojson
+      url: "data/drc-acled-roads.json"
+    paint:
+      circle-radius: 1.4
+      circle-color: "#A95ABE"
+      circle-opacity: 0.55
+
+  - id: acled-within
+    type: circle
+    source:
+      type: geojson
+      url: "data/drc-acled-within.json"
+    paint:
+      circle-radius: 1.7
+      circle-color: "#EE4D4D"
+      circle-opacity: 0.55
+
+  - id: mineral-facilities
+    type: circle
+    source:
+      type: geojson
+      url: "data/drc-mineral-facilities.json"
+    paint:
+      circle-radius: 4
+      circle-color: "#262626"
+      circle-stroke-width: 1.2
+      circle-stroke-color: "#ffffff"
